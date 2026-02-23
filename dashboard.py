@@ -639,10 +639,10 @@ def page_references():
                     )
                     st.markdown(f"#### {display_name}")
                     char_files = groups[char_key]
-                    cols = st.columns(min(len(char_files), 4))
+                    cols = st.columns(4)
                     for i, fpath in enumerate(char_files):
-                        with cols[i % len(cols)]:
-                            st.image(str(fpath), caption=fpath.name, use_container_width=True)
+                        with cols[i % 4]:
+                            st.image(str(fpath), caption=fpath.name, width=200)
                             download_button_for_file(fpath, "Скачать", f"dl_ref_{fpath.stem}")
             else:
                 st.info("Нет файлов персонажей.")
@@ -672,10 +672,10 @@ def page_references():
                     display_name = loc_display.get(loc_key, loc_key.capitalize())
                     st.markdown(f"#### {display_name}")
                     loc_files = groups[loc_key]
-                    cols = st.columns(min(len(loc_files), 4))
+                    cols = st.columns(4)
                     for i, fpath in enumerate(loc_files):
-                        with cols[i % len(cols)]:
-                            st.image(str(fpath), caption=fpath.name, use_container_width=True)
+                        with cols[i % 4]:
+                            st.image(str(fpath), caption=fpath.name, width=200)
                             download_button_for_file(fpath, "Скачать", f"dl_ref_{fpath.stem}")
             else:
                 st.info("Нет файлов локаций.")
@@ -734,8 +734,8 @@ def page_timeline():
         if all_vids:
             st.caption(f"{len(all_vids)} вариантов видео")
             vid_cols = st.columns(min(len(all_vids), 4))
-            for i, vpath in enumerate(all_vids[:4]):
-                with vid_cols[i]:
+            for i, vpath in enumerate(all_vids):
+                with vid_cols[i % len(vid_cols)]:
                     st.video(str(vpath))
         elif first_frame.exists() or last_frame.exists():
             thumb_cols = st.columns([1, 2, 2, 1])
