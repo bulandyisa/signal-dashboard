@@ -601,6 +601,7 @@ def page_references():
                     for i, fpath in enumerate(char_files):
                         with cols[i % len(cols)]:
                             st.image(str(fpath), caption=fpath.name, use_container_width=True)
+                            download_button_for_file(fpath, "Скачать", f"dl_ref_{fpath.stem}")
             else:
                 st.info("Нет файлов персонажей.")
         else:
@@ -633,6 +634,7 @@ def page_references():
                     for i, fpath in enumerate(loc_files):
                         with cols[i % len(cols)]:
                             st.image(str(fpath), caption=fpath.name, use_container_width=True)
+                            download_button_for_file(fpath, "Скачать", f"dl_ref_{fpath.stem}")
             else:
                 st.info("Нет файлов локаций.")
         else:
