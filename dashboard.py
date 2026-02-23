@@ -534,16 +534,13 @@ def page_scenario():
 
     if scenario_file.exists():
         text = scenario_file.read_text(encoding="utf-8")
-        st.download_button(
-            "Скачать сценарий",
-            text.encode("utf-8"),
-            file_name="scenario.txt",
-            mime="text/plain",
-            key="dl_scenario",
-        )
+
+        with st.expander("Полный сценарий", expanded=False):
+            st.text(text)
+
         st.markdown("---")
 
-        # Try to split by scene markers (INT./EXT. or numbered scenes)
+        # Split by scene markers for per-scene navigation
         lines = text.split("\n")
         current_block = []
         blocks = []
@@ -569,8 +566,6 @@ def page_scenario():
                 if first_line:
                     with st.expander(first_line[:80], expanded=False):
                         st.text(block)
-        else:
-            st.text(text)
     else:
         st.warning("Файл сценария не найден.")
 
