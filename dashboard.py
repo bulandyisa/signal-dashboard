@@ -87,6 +87,34 @@ STATUS_MAP = {
 }
 
 
+@st.cache_data
+def load_scenario_by_scene(scenario_file: str) -> dict[str, str]:
+    """Parse scenario file and return {scene_id: full_text} mapping.
+
+    Maps scene numbers (СЦЕНА 1, СЦЕНА 2, ...) to scene IDs (S01, S02, ...).
+    """
+    import re
+    p = Path(scenario_file)
+    if not p.exists():
+        return {}
+    text = p.read_text(encoding="utf-8")
+    scenes: dict[str, str] = {}
+    # Split by scene headers like "СЦЕНА 1 — ..."
+    parts = re.split(r"(?=^СЦЕНА\s+\d+)", text, flags=re.MULTILINE)
+    for part in parts:
+        part = part.strip()
+        m = re.match(r"^СЦЕНА\s+(\d+)", part)
+        if m:
+            num = int(m.group(1))
+            scene_id = f"S{num:02d}"
+            # Remove the header line itself, keep only the body
+            lines = part.split("\n")
+            header = lines[0].strip()
+            body = "\n".join(lines[1:]).strip()
+            scenes[scene_id] = body
+    return scenes
+
+
 def resolve_ingredient_path(raw_path: str) -> Path:
     """Resolve ingredient file path, handling legacy Cyrillic folder names."""
     for old_prefix, new_prefix in INGREDIENT_PATH_MAP.items():
@@ -264,6 +292,7 @@ def page_clips():
     clips_dir = paths["clips"]
 
     clips = load_clips(str(paths["prompts"]))
+    scenario_scenes = load_scenario_by_scene(str(paths["scenario"]))
 
     # --- Sidebar filters ---
     st.sidebar.markdown("---")
@@ -348,6 +377,12 @@ def page_clips():
                 f'margin-top:24px;">{label}</h3>',
                 unsafe_allow_html=True,
             )
+
+            # Scenario quote for this scene
+            scene_text = scenario_scenes.get(current_scene, "")
+            if scene_text:
+                with st.expander("Сценарий сцены", expanded=False):
+                    st.text(scene_text)
 
         status = get_status(clip["clip_id"], frames_dir, clips_dir)
         status_label, status_icon = STATUS_MAP[status]
