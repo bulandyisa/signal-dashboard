@@ -725,11 +725,9 @@ def page_timeline():
         with cols[3]:
             st.markdown(f"{dur}с")
 
-        # Show video variants or frames inline
+        # Show video variants inline (no frame images in timeline)
         variants = get_video_variants(clip_id, clips_dir)
         all_vids = variants["prompt_a"] + variants["prompt_b"]
-        first_frame = frames_dir / f"{clip_id}_first.png"
-        last_frame = frames_dir / f"{clip_id}_last.png"
 
         if all_vids:
             st.caption(f"{len(all_vids)} вариантов видео")
@@ -737,14 +735,6 @@ def page_timeline():
             for i, vpath in enumerate(all_vids):
                 with vid_cols[i % len(vid_cols)]:
                     st.video(str(vpath))
-        elif first_frame.exists() or last_frame.exists():
-            thumb_cols = st.columns([1, 2, 2, 1])
-            with thumb_cols[1]:
-                if first_frame.exists():
-                    st.image(str(first_frame), width=200, caption="First")
-            with thumb_cols[2]:
-                if last_frame.exists():
-                    st.image(str(last_frame), width=200, caption="Last")
 
 
 # ---------------------------------------------------------------------------
