@@ -1,10 +1,9 @@
 """
-СИГНАЛ — Production Dashboard
-Streamlit-дашборд для анимационного проекта
+Nano Banana — Production Dashboard
+Streamlit-дашборд для анимационного проекта (мульти-серии)
 """
 
 import json
-import os
 from pathlib import Path
 
 import streamlit as st
@@ -13,59 +12,66 @@ import streamlit as st
 # Config
 # ---------------------------------------------------------------------------
 BASE_DIR = Path(__file__).parent
-PROMPTS_FILE = BASE_DIR / "output" / "prompts" / "all_prompts.json"
-FRAMES_DIR = BASE_DIR / "output" / "frames"
-CLIPS_DIR = BASE_DIR / "output" / "clips"
-SCENE_DIR = BASE_DIR / "output" / "scene"
+SERIES_DIR = BASE_DIR / "series"
 CHARS_DIR = BASE_DIR / "characters"
 LOCS_DIR = BASE_DIR / "locations"
-SCENARIO_FILE = BASE_DIR / "scenario_signal.txt"
 
-SCENE_COLORS = {
-    "S01": "#E8B849",  # gold
-    "S02": "#49B6E8",  # blue
-    "S03": "#E85A49",  # red
-    "S04": "#6BE849",  # green
-    "S05": "#C149E8",  # purple
+INGREDIENT_PATH_MAP = {
+    "персонажи/": "characters/",
+    "локации/": "locations/",
 }
 
-SCENE_LABELS = {
-    "S01": "Сцена 1 — Холодное открытие",
-    "S02": "Сцена 2 — Гараж, 4 дня назад",
-    "S03": "Сцена 3 — Дом Амина, вечер",
-    "S04": "Сцена 4 — Гараж, 3 дня назад",
-    "S05": "Сцена 5 — Гараж, вечер",
-}
 
-CHAR_DISPLAY = {
-    "Amin": "Амин",
-    "Karim": "Карим",
-    "Tako": "Тако",
-    "Papa": "Папа",
-    "Mama": "Мама",
-    "Aya": "Ая",
-    "Hasan": "Хасан",
-    "Rami": "Рами",
-    "Samir": "Самир",
-    "Shaki": "Шаки",
-}
+# ---------------------------------------------------------------------------
+# Series discovery
+# ---------------------------------------------------------------------------
+
+@st.cache_data
+def discover_series() -> dict[str, dict]:
+    """Scan series/ directory and return {id: meta_dict} for each valid series."""
+    result = {}
+    if not SERIES_DIR.exists():
+        return result
+    for d in sorted(SERIES_DIR.iterdir()):
+        meta_file = d / "meta.json"
+        if d.is_dir() and meta_file.exists():
+            with open(meta_file, encoding="utf-8") as f:
+                meta = json.load(f)
+            meta["_dir"] = str(d)
+            result[meta["id"]] = meta
+    return result
+
+
+def series_paths(series_dir_str: str) -> dict[str, Path]:
+    """Return standard paths for a series directory."""
+    d = Path(series_dir_str)
+    return {
+        "prompts": d / "prompts.json",
+        "frames": d / "frames",
+        "clips": d / "clips",
+        "scenario": d / "scenario.txt",
+    }
+
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 @st.cache_data
-def load_clips() -> list[dict]:
-    """Load clip data from all_prompts.json."""
-    with open(PROMPTS_FILE, encoding="utf-8") as f:
+def load_clips(prompts_file: str) -> list[dict]:
+    """Load clip data from a prompts JSON file."""
+    p = Path(prompts_file)
+    if not p.exists():
+        return []
+    with open(p, encoding="utf-8") as f:
         return json.load(f)
 
 
-def get_status(clip_id: str) -> str:
+def get_status(clip_id: str, frames_dir: Path, clips_dir: Path) -> str:
     """Determine clip status based on existing output files."""
-    has_first = (FRAMES_DIR / f"{clip_id}_first.png").exists()
-    has_last = (FRAMES_DIR / f"{clip_id}_last.png").exists()
-    has_clip = (CLIPS_DIR / f"{clip_id}_clip.mp4").exists()
+    has_first = (frames_dir / f"{clip_id}_first.png").exists()
+    has_last = (frames_dir / f"{clip_id}_last.png").exists()
+    has_clip = (clips_dir / f"{clip_id}_clip.mp4").exists()
 
     if has_first and has_last and has_clip:
         return "done"
@@ -81,9 +87,18 @@ STATUS_MAP = {
 }
 
 
-def scene_badge(scene_id: str) -> str:
+def resolve_ingredient_path(raw_path: str) -> Path:
+    """Resolve ingredient file path, handling legacy Cyrillic folder names."""
+    for old_prefix, new_prefix in INGREDIENT_PATH_MAP.items():
+        if raw_path.startswith(old_prefix):
+            raw_path = new_prefix + raw_path[len(old_prefix):]
+            break
+    return BASE_DIR / raw_path
+
+
+def scene_badge(scene_id: str, scene_colors: dict) -> str:
     """Return HTML badge for a scene."""
-    color = SCENE_COLORS.get(scene_id, "#888")
+    color = scene_colors.get(scene_id, "#888")
     return (
         f'<span style="background:{color};color:#000;padding:2px 8px;'
         f'border-radius:4px;font-weight:600;font-size:0.85em;">{scene_id}</span>'
@@ -240,7 +255,15 @@ def inject_css():
 
 def page_clips():
     """Main clips dashboard page."""
-    clips = load_clips()
+    meta = st.session_state["series_meta"]
+    paths = st.session_state["series_paths"]
+    scene_colors = meta["scene_colors"]
+    scene_labels = meta["scene_labels"]
+    char_display = meta["char_display"]
+    frames_dir = paths["frames"]
+    clips_dir = paths["clips"]
+
+    clips = load_clips(str(paths["prompts"]))
 
     # --- Sidebar filters ---
     st.sidebar.markdown("---")
@@ -259,7 +282,7 @@ def page_clips():
     all_chars = sorted(set(ch for c in clips for ch in c["characters"]))
     selected_char = st.sidebar.selectbox(
         "Персонаж", ["Все"] + all_chars,
-        format_func=lambda x: CHAR_DISPLAY.get(x, x) if x != "Все" else "Все"
+        format_func=lambda x: char_display.get(x, x) if x != "Все" else "Все"
     )
 
     # --- Apply filters ---
@@ -268,13 +291,13 @@ def page_clips():
         filtered = [c for c in filtered if c["scene_id"] == selected_scene]
     if selected_status != "Все":
         status_key = {"Готово": "done", "Частично": "partial", "Не начато": "todo"}[selected_status]
-        filtered = [c for c in filtered if get_status(c["clip_id"]) == status_key]
+        filtered = [c for c in filtered if get_status(c["clip_id"], frames_dir, clips_dir) == status_key]
     if selected_char != "Все":
         filtered = [c for c in filtered if selected_char in c["characters"]]
 
     # --- Sidebar stats ---
     st.sidebar.markdown("---")
-    all_statuses = [get_status(c["clip_id"]) for c in clips]
+    all_statuses = [get_status(c["clip_id"], frames_dir, clips_dir) for c in clips]
     done_count = all_statuses.count("done")
     partial_count = all_statuses.count("partial")
     total = len(clips)
@@ -318,15 +341,15 @@ def page_clips():
         # Scene header
         if clip["scene_id"] != current_scene:
             current_scene = clip["scene_id"]
-            color = SCENE_COLORS.get(current_scene, "#888")
-            label = SCENE_LABELS.get(current_scene, current_scene)
+            color = scene_colors.get(current_scene, "#888")
+            label = scene_labels.get(current_scene, current_scene)
             st.markdown(
                 f'<h3 style="border-bottom:2px solid {color};padding-bottom:6px;'
                 f'margin-top:24px;">{label}</h3>',
                 unsafe_allow_html=True,
             )
 
-        status = get_status(clip["clip_id"])
+        status = get_status(clip["clip_id"], frames_dir, clips_dir)
         status_label, status_icon = STATUS_MAP[status]
         status_class = f"status-{status}"
 
@@ -340,6 +363,11 @@ def page_clips():
 
 def render_clip_card(clip: dict, status: str, status_label: str, status_class: str):
     """Render the full clip card inside an expander."""
+    meta = st.session_state["series_meta"]
+    paths = st.session_state["series_paths"]
+    char_display = meta["char_display"]
+    frames_dir = paths["frames"]
+    clips_dir = paths["clips"]
     clip_id = clip["clip_id"]
 
     # --- Row 1: Status + Meta ---
@@ -350,7 +378,7 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
             unsafe_allow_html=True,
         )
     with meta_col2:
-        chars_display = ", ".join(CHAR_DISPLAY.get(c, c) for c in clip["characters"])
+        chars_display = ", ".join(char_display.get(c, c) for c in clip["characters"])
         st.markdown(f"**Персонажи:** {chars_display}")
     with meta_col3:
         st.markdown(f"**Локация:** {clip['location']}")
@@ -365,7 +393,7 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
     if ingredients:
         cols = st.columns(min(len(ingredients), 4))
         for i, ing in enumerate(ingredients):
-            filepath = BASE_DIR / ing["file"]
+            filepath = resolve_ingredient_path(ing["file"])
             with cols[i % len(cols)]:
                 if filepath.exists():
                     st.image(str(filepath), width=120)
@@ -412,8 +440,8 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
 
     # --- Row 4: Generated frames ---
     st.markdown("**Сгенерированные кадры**")
-    first_frame = FRAMES_DIR / f"{clip_id}_first.png"
-    last_frame = FRAMES_DIR / f"{clip_id}_last.png"
+    first_frame = frames_dir / f"{clip_id}_first.png"
+    last_frame = frames_dir / f"{clip_id}_last.png"
 
     fcol1, fcol2 = st.columns(2)
     with fcol1:
@@ -439,7 +467,7 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
 
     # --- Row 5: Video ---
     st.markdown("**Видео**")
-    clip_video = CLIPS_DIR / f"{clip_id}_clip.mp4"
+    clip_video = clips_dir / f"{clip_id}_clip.mp4"
     if clip_video.exists():
         st.video(str(clip_video))
         download_button_for_file(clip_video, "Скачать видео", f"dl_video_{clip_id}")
@@ -453,15 +481,17 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
 
 def page_scenario():
     """Scenario page — full script text."""
+    paths = st.session_state["series_paths"]
+    scenario_file = paths["scenario"]
+
     st.header("Сценарий")
 
-    if SCENARIO_FILE.exists():
-        text = SCENARIO_FILE.read_text(encoding="utf-8")
-        # Split into scenes for better navigation
+    if scenario_file.exists():
+        text = scenario_file.read_text(encoding="utf-8")
         st.download_button(
             "Скачать сценарий",
             text.encode("utf-8"),
-            file_name="scenario_signal.txt",
+            file_name="scenario.txt",
             mime="text/plain",
             key="dl_scenario",
         )
@@ -472,7 +502,6 @@ def page_scenario():
         current_block = []
         blocks = []
         for line in lines:
-            # Detect scene headers (lines that are all caps or start with INT./EXT.)
             stripped = line.strip()
             if stripped and (
                 stripped.startswith("СЦЕНА")
@@ -497,11 +526,14 @@ def page_scenario():
         else:
             st.text(text)
     else:
-        st.warning("Файл сценария не найден (scenario_signal.txt)")
+        st.warning("Файл сценария не найден.")
 
 
 def page_references():
     """Reference gallery — characters and locations."""
+    meta = st.session_state["series_meta"]
+    char_display = meta["char_display"]
+
     st.header("Референсы")
 
     tab_chars, tab_locs = st.tabs(["Персонажи", "Локации"])
@@ -511,17 +543,15 @@ def page_references():
         if CHARS_DIR.exists():
             files = sorted(CHARS_DIR.glob("char_*"))
             if files:
-                # Group by character name
                 groups: dict[str, list[Path]] = {}
                 for f in files:
-                    # Extract character name: char_amin_full.png -> amin
                     parts = f.stem.split("_")
                     if len(parts) >= 2:
-                        char_key = parts[1]  # e.g. "amin", "karim"
+                        char_key = parts[1]
                         groups.setdefault(char_key, []).append(f)
 
                 for char_key in sorted(groups):
-                    display_name = CHAR_DISPLAY.get(
+                    display_name = char_display.get(
                         char_key.capitalize(), char_key.capitalize()
                     )
                     st.markdown(f"#### {display_name}")
@@ -540,12 +570,11 @@ def page_references():
         if LOCS_DIR.exists():
             files = sorted(LOCS_DIR.glob("loc_*"))
             if files:
-                # Group by location name
                 groups: dict[str, list[Path]] = {}
                 for f in files:
                     parts = f.stem.split("_")
                     if len(parts) >= 2:
-                        loc_key = parts[1]  # e.g. "garazh", "amin", "kabinet"
+                        loc_key = parts[1]
                         groups.setdefault(loc_key, []).append(f)
 
                 loc_display = {
@@ -571,26 +600,34 @@ def page_references():
 
 def page_timeline():
     """Visual timeline of all clips."""
+    meta = st.session_state["series_meta"]
+    paths = st.session_state["series_paths"]
+    scene_colors = meta["scene_colors"]
+    scene_labels = meta["scene_labels"]
+    char_display = meta["char_display"]
+    frames_dir = paths["frames"]
+    clips_dir = paths["clips"]
+
     st.header("Таймлайн")
 
-    clips = load_clips()
+    clips = load_clips(str(paths["prompts"]))
     current_scene = None
 
     for clip in clips:
         if clip["scene_id"] != current_scene:
             current_scene = clip["scene_id"]
-            color = SCENE_COLORS.get(current_scene, "#888")
-            label = SCENE_LABELS.get(current_scene, current_scene)
+            color = scene_colors.get(current_scene, "#888")
+            label = scene_labels.get(current_scene, current_scene)
             st.markdown(
                 f'<h4 style="color:{color};margin-top:20px;">{label}</h4>',
                 unsafe_allow_html=True,
             )
 
         clip_id = clip["clip_id"]
-        status = get_status(clip_id)
+        status = get_status(clip_id, frames_dir, clips_dir)
         _, status_icon = STATUS_MAP[status]
         dur = clip.get("veo_duration", 0)
-        chars = ", ".join(CHAR_DISPLAY.get(c, c) for c in clip["characters"])
+        chars = ", ".join(char_display.get(c, c) for c in clip["characters"])
 
         # Timeline row
         cols = st.columns([1, 3, 1, 1])
@@ -604,8 +641,8 @@ def page_timeline():
             st.markdown(f"{dur}с")
 
         # Show frames inline if they exist
-        first_frame = FRAMES_DIR / f"{clip_id}_first.png"
-        last_frame = FRAMES_DIR / f"{clip_id}_last.png"
+        first_frame = frames_dir / f"{clip_id}_first.png"
+        last_frame = frames_dir / f"{clip_id}_last.png"
         if first_frame.exists() or last_frame.exists():
             thumb_cols = st.columns([1, 2, 2, 1])
             with thumb_cols[1]:
@@ -622,21 +659,41 @@ def page_timeline():
 
 def main():
     st.set_page_config(
-        page_title="СИГНАЛ — Dashboard",
-        page_icon="📡",
+        page_title="Nano Banana — Dashboard",
+        page_icon="🍌",
         layout="wide",
         initial_sidebar_state="expanded",
     )
 
     inject_css()
 
+    # --- Discover series ---
+    all_series = discover_series()
+    if not all_series:
+        st.error("Серии не найдены. Добавьте папку с meta.json в series/")
+        return
+
+    series_ids = list(all_series.keys())
+
     # --- Sidebar header ---
     st.sidebar.markdown(
-        '<h1 style="text-align:center;color:#E8B849;">📡 СИГНАЛ</h1>'
+        '<h1 style="text-align:center;color:#E8B849;">🍌 Nano Banana</h1>'
         '<p style="text-align:center;color:#888;font-size:0.85em;">'
         'Production Dashboard</p>',
         unsafe_allow_html=True,
     )
+
+    # --- Series selector ---
+    selected_id = st.sidebar.selectbox(
+        "Серия",
+        series_ids,
+        format_func=lambda sid: f'{all_series[sid].get("icon", "")} {all_series[sid]["title"]}',
+    )
+
+    series_meta = all_series[selected_id]
+    paths = series_paths(series_meta["_dir"])
+    st.session_state["series_meta"] = series_meta
+    st.session_state["series_paths"] = paths
 
     # --- Navigation ---
     page = st.sidebar.radio(
@@ -647,7 +704,7 @@ def main():
 
     # --- Page routing ---
     if page == "Клипы":
-        st.title("Клипы")
+        st.title(f'{series_meta.get("icon", "")} {series_meta["title"]} — Клипы')
         page_clips()
     elif page == "Таймлайн":
         page_timeline()
@@ -660,7 +717,7 @@ def main():
     st.sidebar.markdown("---")
     st.sidebar.markdown(
         '<p style="text-align:center;color:#555;font-size:0.75em;">'
-        'СИГНАЛ / Signal<br>3D Pixar-style Animation<br>'
+        'Nano Banana Studio<br>3D Pixar-style Animation<br>'
         'Nano Banana Pro + VEO 3.1</p>',
         unsafe_allow_html=True,
     )
