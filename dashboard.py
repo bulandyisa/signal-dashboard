@@ -352,10 +352,12 @@ def page_clips():
             <div class="label">🟢 Готово</div>
         </div>""", unsafe_allow_html=True)
     with col4:
-        total_dur = sum(c.get("veo_duration", 0) for c in clips)
+        done_dur = sum(
+            c.get("veo_duration", 0) for c, s in zip(clips, all_statuses) if s == "done"
+        )
         st.markdown(f"""<div class="stat-card">
-            <div class="number">{total_dur}с</div>
-            <div class="label">Общая длительность</div>
+            <div class="number">{done_dur}с</div>
+            <div class="label">Готовый хронометраж</div>
         </div>""", unsafe_allow_html=True)
 
     st.markdown("")
