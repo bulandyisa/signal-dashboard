@@ -443,6 +443,7 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
             with cols[i % len(cols)]:
                 if filepath.exists():
                     st.image(str(filepath), width=120)
+                    download_button_for_file(filepath, "Скачать", f"dl_ing_{clip_id}_{i}")
                 role = ing.get("role", "")
                 fname = Path(ing["file"]).name
                 st.markdown(
