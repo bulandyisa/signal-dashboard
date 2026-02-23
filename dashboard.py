@@ -321,6 +321,10 @@ def page_clips():
         format_func=lambda x: char_display.get(x, x) if x != "Все" else "Все"
     )
 
+    # Location filter
+    all_locs = sorted(set(c["location"] for c in clips))
+    selected_loc = st.sidebar.selectbox("Локация", ["Все"] + all_locs)
+
     # --- Apply filters ---
     filtered = clips
     if selected_scene != "Все":
@@ -330,6 +334,8 @@ def page_clips():
         filtered = [c for c in filtered if get_status(c["clip_id"], frames_dir, clips_dir) == status_key]
     if selected_char != "Все":
         filtered = [c for c in filtered if selected_char in c["characters"]]
+    if selected_loc != "Все":
+        filtered = [c for c in filtered if c["location"] == selected_loc]
 
     # --- Sidebar stats ---
     st.sidebar.markdown("---")
