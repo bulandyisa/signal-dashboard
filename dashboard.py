@@ -675,17 +675,24 @@ def page_timeline():
         with cols[3]:
             st.markdown(f"{dur}с")
 
-        # Show frames inline if they exist
+        # Show video and frames inline if they exist
+        clip_video = clips_dir / f"{clip_id}_clip.mp4"
         first_frame = frames_dir / f"{clip_id}_first.png"
         last_frame = frames_dir / f"{clip_id}_last.png"
-        if first_frame.exists() or last_frame.exists():
-            thumb_cols = st.columns([1, 2, 2, 1])
-            with thumb_cols[1]:
-                if first_frame.exists():
-                    st.image(str(first_frame), width=200, caption="First")
-            with thumb_cols[2]:
-                if last_frame.exists():
-                    st.image(str(last_frame), width=200, caption="Last")
+        has_media = clip_video.exists() or first_frame.exists() or last_frame.exists()
+        if has_media:
+            if clip_video.exists():
+                vid_cols = st.columns([1, 4, 1])
+                with vid_cols[1]:
+                    st.video(str(clip_video))
+            elif first_frame.exists() or last_frame.exists():
+                thumb_cols = st.columns([1, 2, 2, 1])
+                with thumb_cols[1]:
+                    if first_frame.exists():
+                        st.image(str(first_frame), width=200, caption="First")
+                with thumb_cols[2]:
+                    if last_frame.exists():
+                        st.image(str(last_frame), width=200, caption="Last")
 
 
 # ---------------------------------------------------------------------------
