@@ -124,6 +124,14 @@ def resolve_ingredient_path(raw_path: str) -> Path:
     return BASE_DIR / raw_path
 
 
+def format_clip_id(clip_id: str) -> str:
+    """Convert clip ID like 'S03_A' to 'Сцена 3. Часть 1'."""
+    parts = clip_id.split("_")
+    scene_num = int(parts[0][1:])  # "S03" -> 3
+    part_num = ord(parts[1]) - ord("A") + 1  # "A" -> 1, "B" -> 2
+    return f"Сцена {scene_num}. Часть {part_num}"
+
+
 def scene_badge(scene_id: str, scene_colors: dict) -> str:
     """Return HTML badge for a scene."""
     color = scene_colors.get(scene_id, "#888")
@@ -392,7 +400,7 @@ def page_clips():
 
         # Expander per clip
         header_text = (
-            f'{status_icon} {clip["clip_id"]} — {clip["scene_description_ru"]}'
+            f'{status_icon} {format_clip_id(clip["clip_id"])} — {clip["scene_description_ru"]}'
         )
         with st.expander(header_text, expanded=False):
             render_clip_card(clip, status, status_label, status_class)
@@ -669,7 +677,7 @@ def page_timeline():
         # Timeline row
         cols = st.columns([1, 3, 1, 1])
         with cols[0]:
-            st.markdown(f"**{status_icon} {clip_id}**")
+            st.markdown(f"**{status_icon} {format_clip_id(clip_id)}**")
         with cols[1]:
             st.markdown(clip["scene_description_ru"])
         with cols[2]:
