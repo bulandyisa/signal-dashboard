@@ -1,5 +1,5 @@
 """
-Nano Banana — Production Dashboard
+Путь Амина — Production Dashboard
 Streamlit-дашборд для анимационного проекта (мульти-серии)
 """
 
@@ -703,8 +703,8 @@ def page_timeline():
 
 def main():
     st.set_page_config(
-        page_title="Nano Banana — Dashboard",
-        page_icon="🍌",
+        page_title="Путь Амина — Dashboard",
+        page_icon="🧭",
         layout="wide",
         initial_sidebar_state="expanded",
     )
@@ -721,7 +721,7 @@ def main():
 
     # --- Sidebar header ---
     st.sidebar.markdown(
-        '<h1 style="text-align:center;color:#E8B849;">🍌 Nano Banana</h1>'
+        '<h1 style="text-align:center;color:#E8B849;">🧭 Путь Амина</h1>'
         '<p style="text-align:center;color:#888;font-size:0.85em;">'
         'Production Dashboard</p>',
         unsafe_allow_html=True,
@@ -761,7 +761,7 @@ def main():
     st.sidebar.markdown("---")
     st.sidebar.markdown(
         '<p style="text-align:center;color:#555;font-size:0.75em;">'
-        'Nano Banana Studio<br>3D Pixar-style Animation<br>'
+        'Путь Амина<br>3D Pixar-style Animation<br>'
         'Nano Banana Pro + VEO 3.1</p>',
         unsafe_allow_html=True,
     )
