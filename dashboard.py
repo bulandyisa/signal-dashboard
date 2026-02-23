@@ -300,7 +300,6 @@ def page_clips():
     clips_dir = paths["clips"]
 
     clips = load_clips(str(paths["prompts"]))
-    scenario_scenes = load_scenario_by_scene(str(paths["scenario"]))
 
     # --- Sidebar filters ---
     st.sidebar.markdown("---")
@@ -388,12 +387,6 @@ def page_clips():
                 unsafe_allow_html=True,
             )
 
-            # Scenario quote for this scene
-            scene_text = scenario_scenes.get(current_scene, "")
-            if scene_text:
-                with st.expander("Сценарий сцены", expanded=False):
-                    st.text(scene_text)
-
         status = get_status(clip["clip_id"], frames_dir, clips_dir)
         status_label, status_icon = STATUS_MAP[status]
         status_class = f"status-{status}"
@@ -414,6 +407,14 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
     frames_dir = paths["frames"]
     clips_dir = paths["clips"]
     clip_id = clip["clip_id"]
+
+    # --- Scenario text ---
+    st.markdown("**Сценарий**")
+    st.markdown(
+        f'<div class="prompt-block">{clip["scene_description_ru"]}</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown("---")
 
     # --- Row 1: Status + Meta ---
     meta_col1, meta_col2, meta_col3, meta_col4 = st.columns([1, 1, 1, 1])
