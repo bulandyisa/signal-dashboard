@@ -67,15 +67,32 @@ def load_clips(prompts_file: str) -> list[dict]:
         return json.load(f)
 
 
+def get_video_variants(clip_id: str, clips_dir: Path) -> dict[str, list[Path]]:
+    """Find all video variants for a clip. Returns {'prompt_a': [...], 'prompt_b': [...]}."""
+    result = {"prompt_a": [], "prompt_b": []}
+    clip_dir = clips_dir / clip_id
+    if clip_dir.is_dir():
+        for key in ("prompt_a", "prompt_b"):
+            sub = clip_dir / key
+            if sub.is_dir():
+                result[key] = sorted(sub.glob("*.mp4"))
+    # Backward compat: old single-file format
+    old_clip = clips_dir / f"{clip_id}_clip.mp4"
+    if old_clip.exists() and not result["prompt_a"] and not result["prompt_b"]:
+        result["prompt_a"] = [old_clip]
+    return result
+
+
 def get_status(clip_id: str, frames_dir: Path, clips_dir: Path) -> str:
     """Determine clip status based on existing output files."""
     has_first = (frames_dir / f"{clip_id}_first.png").exists()
     has_last = (frames_dir / f"{clip_id}_last.png").exists()
-    has_clip = (clips_dir / f"{clip_id}_clip.mp4").exists()
+    variants = get_video_variants(clip_id, clips_dir)
+    has_videos = bool(variants["prompt_a"] or variants["prompt_b"])
 
-    if has_first and has_last and has_clip:
+    if has_first and has_last and has_videos:
         return "done"
-    elif has_first or has_last or has_clip:
+    elif has_first or has_last or has_videos:
         return "partial"
     return "todo"
 
@@ -476,11 +493,18 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
     )
 
     veo_info = f'{clip["veo_duration"]}с | {clip["veo_aspect_ratio"]} | {clip["veo_model"]}'
-    st.markdown(f'<div class="prompt-label">VEO — Video ({veo_info})</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="prompt-label">VEO — Промпт A ({veo_info})</div>', unsafe_allow_html=True)
     st.markdown(
         f'<div class="prompt-block">{clip["veo_prompt"]}</div>',
         unsafe_allow_html=True,
     )
+
+    if clip.get("veo_prompt_b"):
+        st.markdown(f'<div class="prompt-label">VEO — Промпт B ({veo_info})</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="prompt-block">{clip["veo_prompt_b"]}</div>',
+            unsafe_allow_html=True,
+        )
 
     if clip.get("audio_note"):
         st.markdown(f'<div class="prompt-label">Audio</div>', unsafe_allow_html=True)
@@ -518,13 +542,24 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
                 unsafe_allow_html=True,
             )
 
-    # --- Row 5: Video ---
-    st.markdown("**Видео**")
-    clip_video = clips_dir / f"{clip_id}_clip.mp4"
-    if clip_video.exists():
-        st.video(str(clip_video))
-        download_button_for_file(clip_video, "Скачать видео", f"dl_video_{clip_id}")
+    # --- Row 5: Video variants ---
+    variants = get_video_variants(clip_id, clips_dir)
+    total_variants = len(variants["prompt_a"]) + len(variants["prompt_b"])
+
+    if total_variants > 0:
+        st.markdown(f"**Видео — {total_variants} вариантов**")
+        for group_key, group_label in [("prompt_a", "Промпт A"), ("prompt_b", "Промпт B")]:
+            vids = variants[group_key]
+            if not vids:
+                continue
+            st.markdown(f"*{group_label}* ({len(vids)} вариантов)")
+            cols = st.columns(min(len(vids), 4))
+            for i, vpath in enumerate(vids):
+                with cols[i % len(cols)]:
+                    st.video(str(vpath))
+                    download_button_for_file(vpath, f"Скачать", f"dl_vid_{clip_id}_{group_key}_{i}")
     else:
+        st.markdown("**Видео**")
         st.markdown(
             '<div style="background:#1A1D26;border:1px dashed #333;border-radius:8px;'
             'padding:40px;text-align:center;color:#555;">Видео — не сгенерировано</div>',
@@ -690,24 +725,26 @@ def page_timeline():
         with cols[3]:
             st.markdown(f"{dur}с")
 
-        # Show video and frames inline if they exist
-        clip_video = clips_dir / f"{clip_id}_clip.mp4"
+        # Show video variants or frames inline
+        variants = get_video_variants(clip_id, clips_dir)
+        all_vids = variants["prompt_a"] + variants["prompt_b"]
         first_frame = frames_dir / f"{clip_id}_first.png"
         last_frame = frames_dir / f"{clip_id}_last.png"
-        has_media = clip_video.exists() or first_frame.exists() or last_frame.exists()
-        if has_media:
-            if clip_video.exists():
-                vid_cols = st.columns([1, 4, 1])
-                with vid_cols[1]:
-                    st.video(str(clip_video))
-            elif first_frame.exists() or last_frame.exists():
-                thumb_cols = st.columns([1, 2, 2, 1])
-                with thumb_cols[1]:
-                    if first_frame.exists():
-                        st.image(str(first_frame), width=200, caption="First")
-                with thumb_cols[2]:
-                    if last_frame.exists():
-                        st.image(str(last_frame), width=200, caption="Last")
+
+        if all_vids:
+            st.caption(f"{len(all_vids)} вариантов видео")
+            vid_cols = st.columns(min(len(all_vids), 4))
+            for i, vpath in enumerate(all_vids[:4]):
+                with vid_cols[i]:
+                    st.video(str(vpath))
+        elif first_frame.exists() or last_frame.exists():
+            thumb_cols = st.columns([1, 2, 2, 1])
+            with thumb_cols[1]:
+                if first_frame.exists():
+                    st.image(str(first_frame), width=200, caption="First")
+            with thumb_cols[2]:
+                if last_frame.exists():
+                    st.image(str(last_frame), width=200, caption="Last")
 
 
 # ---------------------------------------------------------------------------
