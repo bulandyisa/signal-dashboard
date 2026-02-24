@@ -1,0 +1,12 @@
+{
+  "id": "exam",
+  "title": "Экзамен Амина",
+  "title_en": "Amin's Exam",
+  "icon": "📝",
+  "accent_color": "#49B6E8",
+  "scene_labels": {},
+  "scene_colors": {},
+  "char_display": {
+    "Amin": "Амин"
+  }
+}
