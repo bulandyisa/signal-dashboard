@@ -26,8 +26,8 @@
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
-    "veo_prompt": "The hand slowly turns the tuning dial. Static and crackling fill the air. The indicator light pulses. Fragments of distant voices break through the noise, then a monotone mechanical voice reading numbers emerges from the static. Camera holds steady on the receiver. Smooth cinematic motion, 3D Pixar-style animation.",
-    "veo_prompt_b": "Fingers rotate the tuning knob with deliberate precision. A wash of static and electrical crackle floods the space. The indicator lamp flickers rhythmically. Garbled transmissions surface through the interference before a flat, robotic voice reciting a sequence of numbers locks in. Static locked-off shot on the receiver unit. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt": "The hand slowly turns the tuning dial. Static and crackling fill the air. The indicator light pulses. Fragments of distant music break through the noise, then a clear radio signal emerges from the static. Camera holds steady on the receiver. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt_b": "Fingers rotate the tuning knob with deliberate precision. A wash of static and electrical crackle floods the space. The indicator lamp flickers rhythmically. Garbled radio signals surface through the interference before a clear broadcast locks in. Static locked-off shot on the receiver unit. Smooth cinematic motion, 3D Pixar-style animation.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 8,
@@ -87,13 +87,12 @@
     ],
     "location": "Garage",
     "time_of_day": "day",
-    "nano_banana_prompt_first": "The character from Image 1 lies on a sofa, legs draped over the armrest, staring at the ceiling with a blank expression. The character from Image 2 stands in the open doorway with a backpack, just arriving. Use Image 3 as the exact background location. Establishing wide shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
-    "nano_banana_prompt_last": "The character from Image 1 lies on the sofa, staring at the ceiling. The character from Image 2 stands by the workbench, looking at dust on his fingertip after running it across a circuit board. Use Image 3 as the exact background location. Establishing wide shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
+    "nano_banana_prompt_first": "The character in the grey hoodie from Image 1 lies on a sofa on the right side, legs draped over the armrest, staring at the ceiling with a blank expression. The character in the black hoodie from Image 2 stands in the open doorway with a backpack, just arriving. The workbench is on the left side. Use Image 3 as the exact background location. Establishing wide shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
+    "nano_banana_prompt_last": "On the left side, the character in the black hoodie from Image 2 stands by the workbench, looking at dust on his fingertip after running it across a circuit board. On the right side, the character in the grey hoodie from Image 1 lies on the sofa, staring at the ceiling. Use Image 3 as the exact background location. Establishing wide shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
     "nano_banana_ingredients": [
       "персонажи/char_amin_full.png",
       "персонажи/char_karim_full.jpeg",
-      "локации/loc_garazh_inside.jpg",
-      "локации/loc_garazh_outside.jpg"
+      "локации/loc_garazh_inside.jpg"
     ],
     "nano_banana_ingredient_roles": [
       {
@@ -107,21 +106,18 @@
       {
         "file": "локации/loc_garazh_inside.jpg",
         "role": "Location reference"
-      },
-      {
-        "file": "локации/loc_garazh_outside.jpg",
-        "role": "Location reference"
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
     "veo_prompt": "The character in the doorway walks in, sets down his backpack, and approaches the workbench. He runs his finger across the circuit board and looks at the dust on his fingertip. The character on the sofa doesn't move, still staring at the ceiling. Dust particles float in the sunlight. Smooth cinematic motion, 3D Pixar-style animation.",
-    "veo_prompt_b": "Stepping through the entrance, the arriving character drops his backpack and heads toward the workbench. He drags a finger along the circuit board, then inspects the layer of dust coating his fingertip. Meanwhile, the character sprawled on the sofa remains perfectly still, eyes fixed upward at the ceiling. Motes of dust drift lazily through shafts of daylight. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt_b": "The arriving character steps inside, sets his backpack on the floor, and walks over to the workbench. He touches the circuit board and notices a layer of dust on his fingertip. Meanwhile, the character on the sofa remains perfectly still, eyes gazing upward at the ceiling. Dust motes drift lazily through shafts of daylight. Smooth cinematic motion, 3D Pixar-style animation.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 8,
     "veo_aspect_ratio": "16:9",
     "audio_note": "Ambient sound only",
-    "minor_speech_warning": false
+    "minor_speech_warning": false,
+    "nano_banana_model_name": "Nano Banana Pro"
   },
   {
     "scene_id": "S02",
@@ -133,8 +129,8 @@
     ],
     "location": "Garage",
     "time_of_day": "day",
-    "nano_banana_prompt_first": "The character from Image 1 stands in the doorway, grinning widely, holding an enormous homemade antenna made of wooden sticks, wire, and duct tape. The antenna catches on the door frame. Use Image 2 as the exact background location. Medium shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
-    "nano_banana_prompt_last": "The character from Image 1 stands inside, beaming proudly. The homemade antenna sits on the workbench, slightly tilted, propped against a book. Use Image 2 as the exact background location. Medium shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
+    "nano_banana_prompt_first": "The character from Image 1 stands in the doorway, grinning widely, holding an enormous homemade antenna made of wooden sticks, wire, and duct tape. The antenna catches on the door frame. The workbench is on the left side, sofa on the right side. Use Image 2 as the exact background location. Medium shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
+    "nano_banana_prompt_last": "The character from Image 1 stands inside, beaming proudly. The homemade antenna sits on the workbench on the left side, sofa visible on the right side. Use Image 2 as the exact background location. Medium shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
     "nano_banana_ingredients": [
       "персонажи/char_tako_full.png",
       "локации/loc_garazh_inside.jpg"
@@ -150,8 +146,8 @@
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
-    "veo_prompt": "The character tries to squeeze through the doorway with the huge antenna. It catches on the frame — he yanks it — the wire snaps back and hits him on the forehead. He rubs his head, then proudly places the antenna on the workbench. It wobbles and slowly tips over. He catches it and props it up with a book. Smooth cinematic motion, 3D Pixar-style animation.",
-    "veo_prompt_b": "The character struggles to maneuver the oversized antenna through the narrow doorway. It jams against the frame — he tugs hard — the wire rebounds and smacks him square on the forehead. Wincing, he rubs the spot, then beams as he sets the antenna down on the workbench. It teeters, begins to topple — he lunges forward, catches it, and steadies it with a thick book. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt": "The character carefully carries a large antenna through the doorway. It barely fits — he tilts and angles it through. He sets the antenna proudly on the workbench. It wobbles slightly, and he steadies it with a thick book. Satisfied smile. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt_b": "The character navigates a large antenna through the doorway, tilting and adjusting it carefully. He places the antenna on the workbench with a proud expression. It starts to lean, and he quickly props it up with a book. He steps back to admire his work. Smooth cinematic motion, 3D Pixar-style animation.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 6,
@@ -171,13 +167,12 @@
     ],
     "location": "Garage",
     "time_of_day": "day",
-    "nano_banana_prompt_first": "Three characters visible. The character from Image 1 lies on the sofa staring at the ceiling. The character from Image 2 stands in the middle, beaming, antenna on the workbench. The character from Image 3 stands by the workbench watching. Use Image 4 as the exact background location. Medium shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
-    "nano_banana_prompt_last": "Three characters visible. The character from Image 1 lies on the sofa turned to face the wall, back to the others. The character from Image 2 sits alone in the corner, antenna beside him, looking quiet. The character from Image 3 stands by the workbench with a slight shrug. Use Image 4 as the exact background location. Medium shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
+    "nano_banana_prompt_first": "Three characters visible. The character in the grey hoodie from Image 1 lies on the sofa on the right side, staring at the ceiling. The character in the red-striped shirt from Image 2 stands in the middle, beaming, antenna on the workbench on the left side. The character in the black hoodie from Image 3 stands by the workbench watching. Medium shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
+    "nano_banana_prompt_last": "Three characters visible. The character in the grey hoodie from Image 1 lies on the sofa on the right side, turned to face the wall, back to the others. The character in the red-striped shirt from Image 2 sits alone in the corner, antenna beside him, looking quiet. The character in the black hoodie from Image 3 stands by the workbench on the left side with a slight shrug. Medium shot, bright daylight. 3D Pixar-style animation, family-friendly, cinematic.",
     "nano_banana_ingredients": [
       "персонажи/char_amin_full.png",
       "персонажи/char_tako_full.png",
-      "персонажи/char_karim_full.jpeg",
-      "локации/loc_garazh_inside.jpg"
+      "персонажи/char_karim_full.jpeg"
     ],
     "nano_banana_ingredient_roles": [
       {
@@ -191,10 +186,6 @@
       {
         "file": "персонажи/char_karim_full.jpeg",
         "role": "Character reference"
-      },
-      {
-        "file": "локации/loc_garazh_inside.jpg",
-        "role": "Location reference"
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
@@ -218,8 +209,8 @@
     ],
     "location": "Amin room",
     "time_of_day": "evening",
-    "nano_banana_prompt_first": "The character from Image 1 walks down a hallway carrying a briefcase. A bedroom door is slightly ajar ahead. Use Image 3 as the exact background location. Medium shot, warm evening light. 3D Pixar-style animation, family-friendly, cinematic.",
-    "nano_banana_prompt_last": "Over-the-shoulder shot from behind the character from Image 1 standing in a hallway, peering through a slightly open bedroom door. Through the gap, the character from Image 2 lies on a bed staring at the ceiling with a blank expression. Use Image 3 as the exact background location. Warm evening light. 3D Pixar-style animation, family-friendly, cinematic.",
+    "nano_banana_prompt_first": "The character from Image 1 walks down a hallway with plain walls carrying a briefcase. A bedroom door is slightly ajar ahead. No photos, pictures, or portraits on the walls. Use Image 3 as the exact background location. Medium shot, warm evening light. 3D Pixar-style animation, family-friendly, cinematic.",
+    "nano_banana_prompt_last": "Over-the-shoulder shot from behind the character from Image 1 standing in a hallway with plain walls (no photos or portraits on walls), peering through a slightly open bedroom door. Through the gap, the character from Image 2 lies on a bed staring at the ceiling with a blank expression. Use Image 3 as the exact background location. Warm evening light. 3D Pixar-style animation, family-friendly, cinematic.",
     "nano_banana_ingredients": [
       "персонажи/char_papa_full.jpeg",
       "персонажи/char_amin_full.png",
@@ -240,14 +231,15 @@
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
-    "veo_prompt": "The character walks down the hallway, slows his pace, and peers through the slightly open bedroom door. Inside, the other character lies motionless on the bed, staring at the ceiling. The first character watches for a moment, expression softening with quiet worry, then turns and walks away. 3D Pixar-style animation, family-friendly. Smooth cinematic motion.",
-    "veo_prompt_b": "Moving down the corridor, the character gradually decelerates and glances through a bedroom door left ajar. Beyond the gap, the other character lies still on the bed, gaze locked on the ceiling above. The first character observes briefly, a flicker of tender concern crossing his face, before he turns and continues down the hall. 3D Pixar-style animation, family-friendly. Smooth cinematic motion.",
+    "veo_prompt": "The character walks down the hallway and pauses near a slightly open door. Through the gap, he sees the other character sitting quietly, gazing upward, deep in thought. The first character watches for a moment, smiles gently, then continues walking. 3D Pixar-style animation, family-friendly. Smooth cinematic motion.",
+    "veo_prompt_b": "Moving down the corridor, the character slows his pace and peers through a door left slightly ajar. Beyond it, the other character sits peacefully, looking upward, absorbed in thought. The first character lingers for a moment with a soft, warm smile, before turning to continue on his way. 3D Pixar-style animation, family-friendly. Smooth cinematic motion.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 6,
     "veo_aspect_ratio": "16:9",
     "audio_note": "SFX: footsteps in hallway | Ambient: quiet home sounds",
-    "minor_speech_warning": false
+    "minor_speech_warning": false,
+    "nano_banana_model_name": "Nano Banana Pro"
   },
   {
     "scene_id": "S03",
@@ -312,8 +304,8 @@
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
-    "veo_prompt": "The character carefully solders the last connections on the circuit board. He puts down the iron, connects a power cable. The indicator light blinks to life. He reaches for the tuning dial and slowly turns it — static, crackling, fragments of music drift through. His expression shifts to focused anticipation. Smooth cinematic motion, 3D Pixar-style animation.",
-    "veo_prompt_b": "With precise, steady hands, the character finishes soldering the final joints on the board. He sets the iron aside and plugs in the power lead. The indicator lamp flickers on. His fingers find the tuning knob and begin a slow rotation — hiss, crackle, snatches of a distant melody filter in. Anticipation sharpens across his face. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt": "The character carefully connects the last wires on the circuit board. He sets down his tool, plugs in a power cable. The indicator light blinks to life. He reaches for the tuning dial and slowly turns it — crackling sounds, fragments of music drift through. His expression shifts to focused anticipation. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt_b": "With precise, steady hands, the character finishes connecting the final wires on the circuit board. He places his tool aside and plugs in a power cable. A small indicator light flickers on. He reaches over to the tuning dial and begins to rotate it — waves of crackling and distant musical fragments emerge. Anticipation grows on his face. Smooth cinematic motion, 3D Pixar-style animation.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 8,
@@ -389,8 +381,8 @@
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
-    "veo_prompt": "The character stands up abruptly, grabs the paper, and runs out into the evening light. Camera tracks him as he sprints away. Urgent, excited energy. Smooth cinematic motion, 3D Pixar-style animation.",
-    "veo_prompt_b": "The character leaps to his feet, clutches the sheet of paper, and bolts through the door into the golden evening glow. The camera follows in a tracking shot as he races off. Breathless, exhilarated momentum. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt": "The character stands up quickly, picks up the paper, and walks briskly toward the exit into the evening light. Camera follows him as he moves with excited, purposeful energy. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt_b": "The character jumps to his feet, grabs the sheet of paper, and hurries outside into the warm evening light. Camera tracks him as he moves with purposeful, excited energy toward his destination. Smooth cinematic motion, 3D Pixar-style animation.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 5,
@@ -431,8 +423,8 @@
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
-    "veo_prompt": "The character at the workbench turns the radio dial — static fills the space, crackling, nothing meaningful. The character by the door yawns, turns away and takes a step toward the exit, looking bored. Defeated atmosphere. Smooth cinematic motion, 3D Pixar-style animation.",
-    "veo_prompt_b": "The character seated at the workbench twists the radio knob — nothing but hissing static and empty crackle fills the air. Near the doorway, the other character lets out a long yawn, pivots away, and drifts a step toward leaving, visibly unimpressed. A flat, deflated mood hangs over the scene. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt": "The character at the workbench turns the radio dial — only static and crackling comes through. The character by the door yawns, turns away and takes a step toward the exit, looking uninterested. A quiet, calm atmosphere. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt_b": "The character at the workbench adjusts the radio knob — only hissing static fills the air. Near the doorway, the other character lets out a yawn, turns away, and drifts a step toward leaving. A calm, quiet mood hangs over the scene. Smooth cinematic motion, 3D Pixar-style animation.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 8,
@@ -467,8 +459,8 @@
       }
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
-    "veo_prompt": "Suddenly — a rhythmic signal cuts through the static behind him. A monotone voice reads numbers. The character freezes mid-step. His shoulders tense. He slowly turns around, walks back, and sits down in front of the receiver, listening intently. The numbers repeat three times. Then silence. His expression has completely changed. Smooth cinematic motion, 3D Pixar-style animation.",
-    "veo_prompt_b": "Out of nowhere, a repeating signal pierces the background static. A toneless voice begins reciting numbers. The character stops dead in his tracks. His body stiffens. He turns back slowly, returns to the workbench, and lowers himself into the chair before the receiver, listening with rapt attention. The number sequence plays through three full cycles, then cuts off. Absolute quiet. His entire demeanor has transformed. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt": "A clear signal suddenly emerges from the radio static. The character at the door freezes mid-step. His shoulders tense with surprise. He slowly turns around, walks back, and sits down in front of the receiver, listening with full attention. The signal repeats, then fades to silence. His expression shows wonder and excitement. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt_b": "A distinct repeating signal breaks through the background static. The character stops in his tracks. He turns back slowly, returns to the workbench, and lowers himself into the chair before the receiver, listening with complete attention. The signal plays through several cycles, then stops. Quiet fills the room. His entire demeanor has shifted to intense focus. Smooth cinematic motion, 3D Pixar-style animation.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 6,
@@ -504,7 +496,7 @@
     ],
     "nano_banana_model": "Nano Banana Pro (Gemini 3 Pro Image)",
     "veo_prompt": "The character looks up with sudden intensity. He writes two rows of numbers quickly. He pulls an old atlas from the shelf, opens it, and traces coordinates on the map with his finger. His eyes widen as he realizes the location is nearby. Focused, awakening curiosity. Smooth cinematic motion, 3D Pixar-style animation.",
-    "veo_prompt_b": "The character raises his head, eyes sharp with sudden purpose. He jots down two lines of numbers in quick succession. He reaches for a worn atlas on the shelf, flips it open, and runs his finger across the map, matching the coordinates. Recognition dawns — the place is close by. A spark of intense, newly awakened curiosity. Smooth cinematic motion, 3D Pixar-style animation.",
+    "veo_prompt_b": "The character raises his head, eyes sharp with sudden purpose. He quickly writes down two rows of information. He reaches for a worn atlas on the shelf, flips it open, and traces his finger across the map, searching for a specific location. Recognition dawns — the place is nearby. A spark of intense, newly awakened curiosity. Smooth cinematic motion, 3D Pixar-style animation.",
     "veo_mode": "frames_to_video_first_last",
     "veo_model": "Veo 3.1 - Fast",
     "veo_duration": 6,
