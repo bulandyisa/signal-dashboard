@@ -90,9 +90,9 @@ def get_status(clip_id: str, frames_dir: Path, clips_dir: Path) -> str:
     variants = get_video_variants(clip_id, clips_dir)
     has_videos = bool(variants["prompt_a"] or variants["prompt_b"])
 
-    if has_first and has_last and has_videos:
+    if has_videos:
         return "done"
-    elif has_first or has_last or has_videos:
+    elif has_first or has_last:
         return "partial"
     return "todo"
 
