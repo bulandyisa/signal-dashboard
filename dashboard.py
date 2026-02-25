@@ -26,7 +26,7 @@ INGREDIENT_PATH_MAP = {
 # Series discovery
 # ---------------------------------------------------------------------------
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def discover_series() -> dict[str, dict]:
     """Scan series/ directory and return {id: meta_dict} for each valid series."""
     result = {}
@@ -57,7 +57,7 @@ def series_paths(series_dir_str: str) -> dict[str, Path]:
 # Helpers
 # ---------------------------------------------------------------------------
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def load_clips(prompts_file: str) -> list[dict]:
     """Load clip data from a prompts JSON file."""
     p = Path(prompts_file)
@@ -104,7 +104,7 @@ STATUS_MAP = {
 }
 
 
-@st.cache_data
+@st.cache_data(ttl=60)
 def load_scenario_by_scene(scenario_file: str) -> dict[str, str]:
     """Parse scenario file and return {scene_id: full_text} mapping.
 
