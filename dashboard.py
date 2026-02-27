@@ -49,6 +49,7 @@ def series_paths(series_dir_str: str) -> dict[str, Path]:
         "prompts": d / "prompts.json",
         "frames": d / "frames",
         "clips": d / "clips",
+        "review": d / "review",
         "scenario": d / "scenario.txt",
     }
 
@@ -331,16 +332,20 @@ def page_clips():
     status_options = ["Все", "Готово", "Частично", "Не начато"]
     selected_status = st.sidebar.selectbox("Статус", status_options)
 
-    # Character filter
-    all_chars = sorted(set(ch for c in clips for ch in c["characters"]))
-    selected_char = st.sidebar.selectbox(
-        "Персонаж", ["Все"] + all_chars,
-        format_func=lambda x: char_display.get(x, x) if x != "Все" else "Все"
-    )
+    # Character filter (only if clips have characters field)
+    all_chars = sorted(set(ch for c in clips for ch in c.get("characters", [])))
+    selected_char = None
+    if all_chars:
+        selected_char = st.sidebar.selectbox(
+            "Персонаж", ["Все"] + all_chars,
+            format_func=lambda x: char_display.get(x, x) if x != "Все" else "Все"
+        )
 
-    # Location filter
-    all_locs = sorted(set(c["location"] for c in clips))
-    selected_loc = st.sidebar.selectbox("Локация", ["Все"] + all_locs)
+    # Location filter (only if clips have location field)
+    all_locs = sorted(set(c["location"] for c in clips if c.get("location")))
+    selected_loc = None
+    if all_locs:
+        selected_loc = st.sidebar.selectbox("Локация", ["Все"] + all_locs)
 
     # --- Apply filters ---
     filtered = clips
@@ -349,10 +354,10 @@ def page_clips():
     if selected_status != "Все":
         status_key = {"Готово": "done", "Частично": "partial", "Не начато": "todo"}[selected_status]
         filtered = [c for c in filtered if get_status(c["clip_id"], frames_dir, clips_dir) == status_key]
-    if selected_char != "Все":
-        filtered = [c for c in filtered if selected_char in c["characters"]]
-    if selected_loc != "Все":
-        filtered = [c for c in filtered if c["location"] == selected_loc]
+    if selected_char and selected_char != "Все":
+        filtered = [c for c in filtered if selected_char in c.get("characters", [])]
+    if selected_loc and selected_loc != "Все":
+        filtered = [c for c in filtered if c.get("location") == selected_loc]
 
     # --- Sidebar stats ---
     st.sidebar.markdown("---")
@@ -422,6 +427,93 @@ def page_clips():
             render_clip_card(clip, status, status_label, status_class)
 
 
+def render_nb_review(clip_id: str, component: str, review_dir: Path):
+    """Render NB photo variants from the review directory."""
+    comp_dir = review_dir / clip_id / component
+    if not comp_dir.exists():
+        return
+    attempt_dirs = sorted(comp_dir.glob("attempt_*"))
+    if not attempt_dirs:
+        return
+    comp_label = {"nb_first": "First Frame", "nb_mid": "Mid Frame", "nb_last": "Last Frame"}.get(component, component)
+    total_imgs = sum(
+        len(list(ad.glob("*.png"))) + len(list(ad.glob("*/*.png")))
+        for ad in attempt_dirs
+    )
+    if total_imgs == 0:
+        return
+    st.markdown(f"**{comp_label} варианты** ({total_imgs} фото)")
+    for attempt_dir in attempt_dirs:
+        attempt_num = attempt_dir.name.replace("attempt_", "")
+        batches = []
+        for batch_name in ["prompt_a", "prompt_b"]:
+            batch_dir = attempt_dir / batch_name
+            if batch_dir.exists():
+                imgs = sorted(batch_dir.glob("*.png"))
+                if imgs:
+                    batches.append((batch_name, imgs))
+        flat_imgs = sorted(attempt_dir.glob("*.png"))
+        if flat_imgs and not batches:
+            batches.append(("variants", flat_imgs))
+        if not batches:
+            continue
+        total_in_attempt = sum(len(imgs) for _, imgs in batches)
+        with st.expander(f"Попытка {attempt_num} — {total_in_attempt} фото", expanded=(len(attempt_dirs) == 1)):
+            for batch_name, imgs in batches:
+                label = "Промпт A" if batch_name == "prompt_a" else (
+                    "Промпт B" if batch_name == "prompt_b" else "Варианты"
+                )
+                st.markdown(f'<div class="prompt-label">{label} ({len(imgs)} фото)</div>', unsafe_allow_html=True)
+                cols = st.columns(min(len(imgs), 4))
+                for i, ipath in enumerate(imgs):
+                    with cols[i % len(cols)]:
+                        st.image(str(ipath), use_container_width=True)
+                        st.caption(ipath.name)
+
+
+def render_veo_review(clip_id: str, review_dir: Path):
+    """Render VEO video variants from the review directory."""
+    veo_dir = review_dir / clip_id / "veo"
+    if not veo_dir.exists():
+        return
+    attempt_dirs = sorted(veo_dir.glob("attempt_*"))
+    if not attempt_dirs:
+        return
+    total_vids = sum(
+        len(list(ad.glob("*.mp4"))) + len(list(ad.glob("*/*.mp4")))
+        for ad in attempt_dirs
+    )
+    if total_vids == 0:
+        return
+    st.markdown(f"**VEO варианты** ({total_vids} видео)")
+    for attempt_dir in attempt_dirs:
+        attempt_num = attempt_dir.name.replace("attempt_", "")
+        batches = []
+        for batch_name in ["prompt_a", "prompt_b"]:
+            batch_dir = attempt_dir / batch_name
+            if batch_dir.exists():
+                vids = sorted(batch_dir.glob("*.mp4"))
+                if vids:
+                    batches.append((batch_name, vids))
+        flat_vids = sorted(attempt_dir.glob("*.mp4"))
+        if flat_vids and not batches:
+            batches.append(("variants", flat_vids))
+        if not batches:
+            continue
+        total_in_attempt = sum(len(vids) for _, vids in batches)
+        with st.expander(f"Попытка {attempt_num} — {total_in_attempt} видео", expanded=(len(attempt_dirs) == 1)):
+            for batch_name, vids in batches:
+                label = "Промпт A" if batch_name == "prompt_a" else (
+                    "Промпт B" if batch_name == "prompt_b" else "Варианты"
+                )
+                st.markdown(f'<div class="prompt-label">{label} ({len(vids)} видео)</div>', unsafe_allow_html=True)
+                cols = st.columns(min(len(vids), 4))
+                for i, vpath in enumerate(vids):
+                    with cols[i % len(cols)]:
+                        st.video(str(vpath))
+                        st.caption(vpath.name)
+
+
 def render_clip_card(clip: dict, status: str, status_label: str, status_class: str):
     """Render the full clip card inside an expander."""
     meta = st.session_state["series_meta"]
@@ -447,28 +539,39 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
             unsafe_allow_html=True,
         )
     with meta_col2:
-        chars_display = ", ".join(char_display.get(c, c) for c in clip["characters"])
-        st.markdown(f"**Персонажи:** {chars_display}")
+        chars = clip.get("characters", [])
+        if chars:
+            chars_display = ", ".join(char_display.get(c, c) for c in chars)
+            st.markdown(f"**Персонажи:** {chars_display}")
     with meta_col3:
-        st.markdown(f"**Локация:** {clip['location']}")
+        loc = clip.get("location", "")
+        if loc:
+            st.markdown(f"**Локация:** {loc}")
     with meta_col4:
-        st.markdown(f"**Время:** {clip['time_of_day']}")
+        tod = clip.get("time_of_day", "")
+        if tod:
+            st.markdown(f"**Время:** {tod}")
 
     st.markdown("---")
 
     # --- Row 2: Character & location thumbnails ---
     st.markdown("**Референсы (ингредиенты)**")
-    ingredients = clip.get("nano_banana_ingredient_roles", [])
+    ingredients = clip.get("nano_banana_ingredient_roles") or clip.get("nano_banana_ingredients", [])
     if ingredients:
         cols = st.columns(min(len(ingredients), 4))
         for i, ing in enumerate(ingredients):
-            filepath = resolve_ingredient_path(ing["file"])
+            if isinstance(ing, dict):
+                filepath = resolve_ingredient_path(ing["file"])
+                role = ing.get("role", "")
+                fname = Path(ing["file"]).name
+            else:
+                filepath = resolve_ingredient_path(ing)
+                role = ""
+                fname = Path(ing).name
             with cols[i % len(cols)]:
                 if filepath.exists():
                     st.image(str(filepath), width=120)
                     download_button_for_file(filepath, "Скачать", f"dl_ing_{clip_id}_{i}")
-                role = ing.get("role", "")
-                fname = Path(ing["file"]).name
                 st.markdown(
                     f'<span class="role-badge">{role}</span><br>'
                     f'<span style="font-size:0.72em;color:#666;">{fname}</span>',
@@ -480,38 +583,44 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
     # --- Row 3: Prompts ---
     st.markdown("**Промпты**")
 
-    st.markdown('<div class="prompt-label">Nano Banana — First Frame</div>', unsafe_allow_html=True)
-    st.markdown(
-        f'<div class="prompt-block">{clip["nano_banana_prompt_first"]}</div>',
-        unsafe_allow_html=True,
-    )
+    # NB First Frame (A + B)
+    pfa = clip.get("nano_banana_prompt_first", "")
+    pfb = clip.get("nano_banana_prompt_first_b", "")
+    if pfa:
+        st.markdown('<div class="prompt-label">NB First — Промпт A</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prompt-block">{pfa}</div>', unsafe_allow_html=True)
+    if pfb and pfb != pfa:
+        st.markdown('<div class="prompt-label">NB First — Промпт B</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prompt-block">{pfb}</div>', unsafe_allow_html=True)
 
-    st.markdown('<div class="prompt-label">Nano Banana — Last Frame</div>', unsafe_allow_html=True)
-    st.markdown(
-        f'<div class="prompt-block">{clip["nano_banana_prompt_last"]}</div>',
-        unsafe_allow_html=True,
-    )
+    # NB Last Frame (A + B)
+    pla = clip.get("nano_banana_prompt_last", "")
+    plb = clip.get("nano_banana_prompt_last_b", "")
+    if pla:
+        st.markdown('<div class="prompt-label">NB Last — Промпт A</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prompt-block">{pla}</div>', unsafe_allow_html=True)
+    if plb and plb != pla:
+        st.markdown('<div class="prompt-label">NB Last — Промпт B</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prompt-block">{plb}</div>', unsafe_allow_html=True)
 
-    veo_info = f'{clip["veo_duration"]}с | {clip["veo_aspect_ratio"]} | {clip["veo_model"]}'
-    st.markdown(f'<div class="prompt-label">VEO — Промпт A ({veo_info})</div>', unsafe_allow_html=True)
-    st.markdown(
-        f'<div class="prompt-block">{clip["veo_prompt"]}</div>',
-        unsafe_allow_html=True,
-    )
-
-    if clip.get("veo_prompt_b"):
-        st.markdown(f'<div class="prompt-label">VEO — Промпт B ({veo_info})</div>', unsafe_allow_html=True)
-        st.markdown(
-            f'<div class="prompt-block">{clip["veo_prompt_b"]}</div>',
-            unsafe_allow_html=True,
-        )
+    # VEO (A + B)
+    veo_a = clip.get("veo_prompt", "")
+    veo_b = clip.get("veo_prompt_b", "")
+    veo_parts = []
+    if clip.get("veo_duration"): veo_parts.append(f'{clip["veo_duration"]}с')
+    if clip.get("veo_aspect_ratio"): veo_parts.append(clip["veo_aspect_ratio"])
+    if clip.get("veo_model"): veo_parts.append(clip["veo_model"])
+    veo_info = " | ".join(veo_parts) if veo_parts else "VEO 3.1 Fast"
+    if veo_a:
+        st.markdown(f'<div class="prompt-label">VEO — Промпт A ({veo_info})</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prompt-block">{veo_a}</div>', unsafe_allow_html=True)
+    if veo_b and veo_b != veo_a:
+        st.markdown(f'<div class="prompt-label">VEO — Промпт B</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prompt-block">{veo_b}</div>', unsafe_allow_html=True)
 
     if clip.get("audio_note"):
-        st.markdown(f'<div class="prompt-label">Audio</div>', unsafe_allow_html=True)
-        st.markdown(
-            f'<div class="prompt-block">{clip["audio_note"]}</div>',
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="prompt-label">Audio</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="prompt-block">{clip["audio_note"]}</div>', unsafe_allow_html=True)
 
     st.markdown("---")
 
@@ -542,7 +651,15 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
                 unsafe_allow_html=True,
             )
 
-    # --- Row 5: Video variants ---
+    # --- Row 5: NB Review Variants ---
+    review_dir = paths.get("review", Path())
+    for comp in ["nb_first", "nb_mid", "nb_last"]:
+        render_nb_review(clip_id, comp, review_dir)
+
+    # --- Row 6: VEO Review Variants ---
+    render_veo_review(clip_id, review_dir)
+
+    # --- Row 7: Video variants ---
     variants = get_video_variants(clip_id, clips_dir)
     total_variants = len(variants["prompt_a"]) + len(variants["prompt_b"])
 
@@ -712,7 +829,7 @@ def page_timeline():
         status = get_status(clip_id, frames_dir, clips_dir)
         _, status_icon = STATUS_MAP[status]
         dur = clip.get("veo_duration", 0)
-        chars = ", ".join(char_display.get(c, c) for c in clip["characters"])
+        chars = ", ".join(char_display.get(c, c) for c in clip.get("characters", []))
 
         # Timeline row
         cols = st.columns([1, 3, 1, 1])
