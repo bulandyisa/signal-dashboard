@@ -333,7 +333,7 @@ def page_clips():
     selected_status = st.sidebar.selectbox("Статус", status_options)
 
     # Character filter (only if clips have characters field)
-    all_chars = sorted(set(ch for c in clips for ch in c.get("characters", [])))
+    all_chars = sorted(set(ch for c in clips for ch in (c.get("characters") or [])))
     selected_char = None
     if all_chars:
         selected_char = st.sidebar.selectbox(
@@ -355,7 +355,7 @@ def page_clips():
         status_key = {"Готово": "done", "Частично": "partial", "Не начато": "todo"}[selected_status]
         filtered = [c for c in filtered if get_status(c["clip_id"], frames_dir, clips_dir) == status_key]
     if selected_char and selected_char != "Все":
-        filtered = [c for c in filtered if selected_char in c.get("characters", [])]
+        filtered = [c for c in filtered if selected_char in (c.get("characters") or [])]
     if selected_loc and selected_loc != "Все":
         filtered = [c for c in filtered if c.get("location") == selected_loc]
 
@@ -388,7 +388,7 @@ def page_clips():
         </div>""", unsafe_allow_html=True)
     with col4:
         done_dur = sum(
-            c.get("veo_duration", 0) for c, s in zip(clips, all_statuses) if s == "done"
+            (c.get("veo_duration") or 0) for c, s in zip(clips, all_statuses) if s == "done"
         )
         st.markdown(f"""<div class="stat-card">
             <div class="number">{done_dur}с</div>
@@ -539,7 +539,7 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
             unsafe_allow_html=True,
         )
     with meta_col2:
-        chars = clip.get("characters", [])
+        chars = clip.get("characters") or []
         if chars:
             chars_display = ", ".join(char_display.get(c, c) for c in chars)
             st.markdown(f"**Персонажи:** {chars_display}")
@@ -556,7 +556,7 @@ def render_clip_card(clip: dict, status: str, status_label: str, status_class: s
 
     # --- Row 2: Character & location thumbnails ---
     st.markdown("**Референсы (ингредиенты)**")
-    ingredients = clip.get("nano_banana_ingredient_roles") or clip.get("nano_banana_ingredients", [])
+    ingredients = clip.get("nano_banana_ingredient_roles") or clip.get("nano_banana_ingredients") or []
     if ingredients:
         cols = st.columns(min(len(ingredients), 4))
         for i, ing in enumerate(ingredients):
@@ -828,8 +828,8 @@ def page_timeline():
         clip_id = clip["clip_id"]
         status = get_status(clip_id, frames_dir, clips_dir)
         _, status_icon = STATUS_MAP[status]
-        dur = clip.get("veo_duration", 0)
-        chars = ", ".join(char_display.get(c, c) for c in clip.get("characters", []))
+        dur = clip.get("veo_duration") or 0
+        chars = ", ".join(char_display.get(c, c) for c in (clip.get("characters") or []))
 
         # Timeline row
         cols = st.columns([1, 3, 1, 1])
