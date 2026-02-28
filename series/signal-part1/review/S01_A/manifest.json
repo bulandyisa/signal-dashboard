@@ -1,0 +1,230 @@
+{
+  "clip_id": "S01_A",
+  "components": {
+    "nb_first": {
+      "attempts": [
+        {
+          "attempt": 1,
+          "prompt": "prompt_a + prompt_b",
+          "variants": [
+            {
+              "file": "prompt_a/variant_1.png",
+              "scores": {
+                "char_face": 9,
+                "char_outfit": 10,
+                "char_count": 10,
+                "anatomy_hands": 8,
+                "anatomy_body": 9,
+                "anatomy_face": 9,
+                "scale": 9,
+                "physics": 10,
+                "spatial": 9,
+                "scenario_action": 10,
+                "scenario_emotion": 10,
+                "scenario_objects": 9,
+                "loc_match": 9,
+                "lighting": 10,
+                "artifacts": 10,
+                "style_3d": 10,
+                "composition": 9,
+                "continuity": 0
+              },
+              "avg": 9.411764705882353
+            },
+            {
+              "file": "prompt_a/variant_2.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_3.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_4.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_1.png",
+              "scores": {
+                "char_face": 9,
+                "char_outfit": 10,
+                "char_count": 10,
+                "anatomy_hands": 8,
+                "anatomy_body": 9,
+                "anatomy_face": 9,
+                "scale": 9,
+                "physics": 10,
+                "spatial": 9,
+                "scenario_action": 10,
+                "scenario_emotion": 9,
+                "scenario_objects": 9,
+                "loc_match": 9,
+                "lighting": 9,
+                "artifacts": 9,
+                "style_3d": 10,
+                "composition": 9,
+                "continuity": 0
+              },
+              "avg": 9.235294117647058
+            },
+            {
+              "file": "prompt_b/variant_2.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_3.png",
+              "scores": null,
+              "avg": null
+            }
+          ],
+          "best_variant": 4,
+          "best_avg": 9.235294117647058,
+          "batch_a_count": 4,
+          "batch_b_count": 3
+        }
+      ],
+      "selected_variant_a": {
+        "attempt": 1,
+        "variant": 0
+      },
+      "selected_variant_b": {
+        "attempt": 1,
+        "variant": 4
+      },
+      "status": "accepted"
+    },
+    "nb_mid": {
+      "attempts": [],
+      "selected_variant_a": null,
+      "selected_variant_b": null,
+      "status": "pending"
+    },
+    "nb_last": {
+      "attempts": [
+        {
+          "attempt": 1,
+          "prompt": "First, the exact character from Image 2, preserving identical facial features and proportions, sits at the dinner table, eyebrows raised, expression of exasperated amusement, one hand resting on the table. Then, the exact character from Image 1, preserving identical facial features, sits across, looking slightly sheepish, hands lowered to the table, caught mid-excuse. Use Image 3 as the exact background location. Medium shot, eye-level. Warm evening indoor lighting, soft golden tones. No text, no watermarks. 3D Pixar-style, family-friendly, cinematic. Maintain exact visual continuity with Image 4.",
+          "variants": [
+            {
+              "file": "prompt_a/variant_1.png",
+              "scores": {
+                "char_face": 9,
+                "char_outfit": 10,
+                "char_count": 10,
+                "anatomy_hands": 8,
+                "anatomy_body": 9,
+                "anatomy_face": 9,
+                "scale": 9,
+                "physics": 10,
+                "spatial": 9,
+                "scenario_action": 8,
+                "scenario_emotion": 8,
+                "scenario_objects": 9,
+                "loc_match": 9,
+                "lighting": 10,
+                "artifacts": 9,
+                "style_3d": 10,
+                "composition": 9,
+                "continuity": 9
+              },
+              "avg": 9.11111111111111
+            },
+            {
+              "file": "prompt_a/variant_2.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_3.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_4.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_1.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_2.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_3.png",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_4.png",
+              "scores": null,
+              "avg": null
+            }
+          ],
+          "best_variant": 0,
+          "best_avg": 9.11111111111111,
+          "prompt_b": "First, the exact character from Image 2, preserving identical facial features and proportions, sits at the table with a knowing smile, chin resting on one hand, looking across with fond exasperation. Then, the exact character from Image 1, preserving identical facial features, shrugs with palms up, mouth quirked in a defensive grin. Use Image 3 as the exact background location. Medium shot, slightly lower angle. Warm kitchen glow, soft shadows. No text, no watermarks. 3D Pixar-style, family-friendly, cinematic. Maintain exact visual continuity with Image 4.",
+          "batch_a_count": 4,
+          "batch_b_count": 4
+        }
+      ],
+      "selected_variant_a": {
+        "attempt": 1,
+        "variant": 0
+      },
+      "selected_variant_b": null,
+      "status": "accepted"
+    },
+    "veo": {
+      "attempts": [
+        {
+          "attempt": 1,
+          "prompt": "A: Static medium shot. The character at the table gestures animatedly, waving both hands while telling a story, then pauses as the other character responds with a calm remark. Subtle shift from excitement to sheepish expression. Audio: dinner table ambiance, soft clink of dishes, muffled conversation. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.\n---\nB: Locked-off medium-wide shot. One character leans forward enthusiastically, arms spread wide in dramatic storytelling, then freezes as the other delivers a dry comment. Brief silence, then a sheepish shrug. Audio: warm kitchen sounds, clatter of spoons, a gentle laugh. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.",
+          "variants": [
+            {
+              "file": "prompt_a/variant_1.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_1.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_2.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_3.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_4.mp4",
+              "scores": null,
+              "avg": null
+            }
+          ],
+          "best_variant": null,
+          "best_avg": null,
+          "prompt_b": "Locked-off medium-wide shot. One character leans forward enthusiastically, arms spread wide in dramatic storytelling, then freezes as the other delivers a dry comment. Brief silence, then a sheepish shrug. Audio: warm kitchen sounds, clatter of spoons, a gentle laugh. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.",
+          "batch_a_count": 1,
+          "batch_b_count": 4
+        }
+      ],
+      "status": "pending",
+      "selected_variant_a": null,
+      "selected_variant_b": null
+    }
+  }
+}
