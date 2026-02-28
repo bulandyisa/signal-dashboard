@@ -111,11 +111,6 @@
           "variants": [
             {
               "file": "prompt_a/variant_1.png",
-              "scores": null,
-              "avg": null
-            },
-            {
-              "file": "prompt_a/variant_2.png",
               "scores": {
                 "char_face": 8,
                 "char_outfit": 10,
@@ -136,6 +131,11 @@
                 "composition": 9
               },
               "avg": 9.0
+            },
+            {
+              "file": "prompt_a/variant_2.png",
+              "scores": null,
+              "avg": null
             },
             {
               "file": "prompt_a/variant_3.png",
@@ -168,7 +168,7 @@
               "avg": null
             }
           ],
-          "best_variant": 1,
+          "best_variant": 0,
           "best_avg": 9.0,
           "prompt_b": "First, the exact character from Image 2, preserving identical facial features and proportions, leans over the workbench soldering a connection on a small radio device, smoke rising from the iron tip, face lit by the glow. Then, the exact character from Image 1, preserving identical facial features, watches closely, holding a component ready to attach. Use Image 3 as the exact background location. Close-up on the workbench, slightly high angle. Warm directional light from overhead, soft shadows. No text, no watermarks. 3D Pixar-style, family-friendly, cinematic.",
           "batch_a_count": 4,
@@ -177,7 +177,7 @@
       ],
       "selected_variant_a": {
         "attempt": 3,
-        "variant": 1
+        "variant": 0
       },
       "selected_variant_b": null,
       "status": "accepted"
@@ -201,27 +201,8 @@
             },
             {
               "file": "prompt_a/variant_2.png",
-              "scores": {
-                "char_face": 8,
-                "char_outfit": 9,
-                "char_count": 10,
-                "anatomy_hands": 8,
-                "anatomy_body": 9,
-                "anatomy_face": 9,
-                "scale": 9,
-                "physics": 9,
-                "spatial": 9,
-                "scenario_action": 8,
-                "scenario_emotion": 9,
-                "scenario_objects": 10,
-                "loc_match": 9,
-                "lighting": 9,
-                "artifacts": 10,
-                "style_3d": 10,
-                "composition": 9,
-                "continuity": 8
-              },
-              "avg": 9.0
+              "scores": null,
+              "avg": null
             },
             {
               "file": "prompt_a/variant_3.png",
@@ -254,7 +235,7 @@
               "avg": null
             }
           ],
-          "best_variant": 1,
+          "best_variant": 0,
           "best_avg": 9.0,
           "prompt_b": "First, the exact character from Image 1, preserving identical facial features and proportions, flips a switch on the handmade radio, eyes fixed on the device, breath held. Then, the exact character from Image 2, preserving identical facial features, leans closer with wide eyes, hands gripping the workbench edge. A tiny LED blinks on the radio. Use Image 3 as the exact background location. Medium shot, slight low angle. Warm overhead garage light, subtle lens flare from the indicator. No text, no watermarks. 3D Pixar-style, family-friendly, cinematic. Maintain exact visual continuity with Image 4.",
           "batch_a_count": 4,
@@ -263,7 +244,7 @@
       ],
       "selected_variant_a": {
         "attempt": 1,
-        "variant": 1
+        "variant": 0
       },
       "selected_variant_b": null,
       "status": "accepted"
@@ -285,7 +266,12 @@
               "avg": null
             },
             {
-              "file": "prompt_b/variant_1.mp4",
+              "file": "prompt_a/variant_3.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_4.mp4",
               "scores": null,
               "avg": null
             }
@@ -293,8 +279,34 @@
           "best_variant": null,
           "best_avg": null,
           "prompt_b": "Slow dolly in toward the workbench. Hands work on a radio receiver — soldering, connecting. One character flips the switch. Static bursts from the speaker, then fragments of music and voices emerge. Both freeze, listening. Audio: electrical hum, switch click, rising radio static with distant voice fragments. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.",
-          "batch_a_count": 2,
-          "batch_b_count": 1
+          "batch_a_count": 4,
+          "batch_b_count": 0
+        },
+        {
+          "attempt": 2,
+          "prompt": "A: Static medium shot. Two characters at the workbench make final adjustments to a small radio, then one reaches for the power switch. The indicator light blinks on. Both lean in to listen. Audio: soldering hiss, click of a switch, radio static crackling to life. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.\n---\nB: Slow dolly in toward the workbench. Hands work on a radio receiver — soldering, connecting. One character flips the switch. Static bursts from the speaker, then fragments of music and voices emerge. Both freeze, listening. Audio: electrical hum, switch click, rising radio static with distant voice fragments. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.",
+          "variants": [
+            {
+              "file": "prompt_a/variant_1.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_2.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_3.mp4",
+              "scores": null,
+              "avg": null
+            }
+          ],
+          "best_variant": null,
+          "best_avg": null,
+          "prompt_b": "Slow dolly in toward the workbench. Hands work on a radio receiver — soldering, connecting. One character flips the switch. Static bursts from the speaker, then fragments of music and voices emerge. Both freeze, listening. Audio: electrical hum, switch click, rising radio static with distant voice fragments. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.",
+          "batch_a_count": 3,
+          "batch_b_count": 0
         }
       ],
       "selected_variant_a": null,

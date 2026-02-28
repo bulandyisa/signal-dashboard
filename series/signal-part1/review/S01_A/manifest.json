@@ -220,6 +220,57 @@
           "prompt_b": "Locked-off medium-wide shot. One character leans forward enthusiastically, arms spread wide in dramatic storytelling, then freezes as the other delivers a dry comment. Brief silence, then a sheepish shrug. Audio: warm kitchen sounds, clatter of spoons, a gentle laugh. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.",
           "batch_a_count": 1,
           "batch_b_count": 4
+        },
+        {
+          "attempt": 2,
+          "prompt": "A: Static medium shot. The character at the table gestures animatedly, waving both hands while telling a story, then pauses as the other character responds with a calm remark. Subtle shift from excitement to sheepish expression. Audio: dinner table ambiance, soft clink of dishes, muffled conversation. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.\n---\nB: Locked-off medium-wide shot. One character leans forward enthusiastically, arms spread wide in dramatic storytelling, then freezes as the other delivers a dry comment. Brief silence, then a sheepish shrug. Audio: warm kitchen sounds, clatter of spoons, a gentle laugh. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.",
+          "variants": [
+            {
+              "file": "prompt_a/variant_1.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_2.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_3.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_a/variant_4.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_1.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_2.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_3.mp4",
+              "scores": null,
+              "avg": null
+            },
+            {
+              "file": "prompt_b/variant_4.mp4",
+              "scores": null,
+              "avg": null
+            }
+          ],
+          "best_variant": null,
+          "best_avg": null,
+          "prompt_b": "Locked-off medium-wide shot. One character leans forward enthusiastically, arms spread wide in dramatic storytelling, then freezes as the other delivers a dry comment. Brief silence, then a sheepish shrug. Audio: warm kitchen sounds, clatter of spoons, a gentle laugh. Smooth cinematic motion, 3D Pixar-style animation, family-friendly. No subtitles.",
+          "batch_a_count": 4,
+          "batch_b_count": 4
         }
       ],
       "status": "pending",
